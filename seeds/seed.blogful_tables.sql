@@ -8,12 +8,12 @@ TRUNCATE
 
 INSERT INTO blogful_users (user_name, full_name, nickname, password)
 VALUES
-  ('dunder', 'Dunder Mifflin', null, 'password'),
-  ('b.deboop', 'Bodeep Deboop', 'Bo', 'bo-password'),
-  ('c.bloggs', 'Charlie Bloggs', 'Charlie', 'charlie-password'),
-  ('s.smith', 'Sam Smith', 'Sam', 'sam-password'),
-  ('lexlor', 'Alex Taylor', 'Lex', 'lex-password'),
-  ('wippy', 'Ping Won In', 'Ping', 'ping-password');
+  ('dunder', 'Dunder Mifflin', null, '$2a$12$ocgxA5hjodOuQKl7/zjHm.IjZwJhweCofq56JO/5uB9mTMG65UaB6'),
+  ('b.deboop', 'Bodeep Deboop', 'Bo', '$2a$12$2aQv0Cl/.XwMg2BDT.MOLuF.ehd9wQHDP97NcKQusqWqR4LtFfZqG'),
+  ('c.bloggs', 'Charlie Bloggs', 'Charlie', '$2a$12$P/HntWvJP7KNOFwEEJWJ6eA3sTMvFJrLMQtZF/wdaIMEhA79GZKBm'),
+  ('s.smith', 'Sam Smith', 'Sam', '$2a$12$PQqDhRF.jSiZYT2hf6QjP.e3/2T37cv1iT5JUc5vOZL2Zn6Y0KGc.'),
+  ('lexlor', 'Alex Taylor', 'Lex', '$2a$12$hYE2cvST7ZtIKAefl9e7COBZ5IrGCzbepW7R4/hCImxgiGNyohQRu'),
+  ('wippy', 'Ping Won In', 'Ping', '$2a$12$6PXonl4cYJzwxLhQhcJ4NOQmB89oncjFKG3Ya8WLZg/yGnlgM/xPS');
 
 INSERT INTO blogful_articles (title, style, author_id, content)
 VALUES
