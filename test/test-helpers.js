@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs')
 
-
 function makeUsersArray() {
   return [
     {
@@ -37,7 +36,6 @@ function makeUsersArray() {
     },
   ]
 }
-
 
 function makeArticlesArray(users) {
   return [
@@ -227,7 +225,6 @@ function cleanTables(db) {
   )
 }
 
-
 function seedUsers(db, users) {
     const preppedUsers = users.map(user => ({
       ...user,
@@ -236,8 +233,7 @@ function seedUsers(db, users) {
     return db.into('blogful_users').insert(preppedUsers)
       .then(() =>
         // update the auto sequence to stay in sync
-        db.raw(
-          `SELECT setval('blogful_users_id_seq', ?)`,
+        db.raw(`SELECT setval('blogful_users_id_seq', ?)`,
           [users[users.length - 1].id],
         )
       )
@@ -247,28 +243,14 @@ function seedUsers(db, users) {
 function seedArticlesTables(db, users, articles, comments=[]) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
-    //removed //await trx.into('blogful_users').insert(users)
     await seedUsers(trx, users)
     await trx.into('blogful_articles').insert(articles)
     // update the auto sequence to match the forced id values
-    /* removed
-    await Promise.all([
-      trx.raw(
-        `SELECT setval('blogful_users_id_seq', ?)`,
-        [users[users.length - 1].id],
-      ),
-      trx.raw(
-        `SELECT setval('blogful_articles_id_seq', ?)`,
-        [articles[articles.length - 1].id],
-      ),
-    ])
-    */
     await trx.raw(
       `SELECT setval('blogful_articles_id_seq', ?)`,
         [articles[articles.length - 1].id],
     )
     // only insert comments if there are some, also update the sequence counter
-    /* removed
     if (comments.length) {
       await trx.into('blogful_comments').insert(comments)
       await trx.raw(
@@ -276,14 +258,10 @@ function seedArticlesTables(db, users, articles, comments=[]) {
         [comments[comments.length - 1].id],
       )
     }
-    */
   })
 }
 
 function seedMaliciousArticle(db, user, article) {
-  //removed //return db
-    //removed //.into('blogful_users')
-    //removed //.insert([user])
   return seedUsers(db, [user])  
     .then(() =>
       db
