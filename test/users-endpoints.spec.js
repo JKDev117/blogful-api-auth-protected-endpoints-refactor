@@ -110,9 +110,9 @@ describe.only('Users Endpoints', function() {
               full_name: 'test full_name',
               }
               return supertest(app)
-              .post('/api/users')
-              .send(userPasswordNotComplex)
-              .expect(400, { error: `Password must contain 1 upper case, lower case, number and special character` })
+                .post('/api/users')
+                .send(userPasswordNotComplex)
+                .expect(400, { error: `Password must contain 1 upper case, lower case, number and special character` })
       })
 
       it(`responds 400 'User name already taken' when user_name isn't unique`, () => {
@@ -125,8 +125,48 @@ describe.only('Users Endpoints', function() {
             .post('/api/users')
             .send(duplicateUser)
             .expect(400, { error: `Username already taken` })
-      })
-      
+      })      
     })//end context `User Validation`
+
+    context(`Happy path`, () => {
+          it(`responds 201, serialized user, storing bcryped password`, () => {
+            const newUser = {
+              user_name: 'test user_name',
+              password: '11AAaa!!',
+              full_name: 'test full_name',
+            }
+            return supertest(app)
+              .post('/api/users')
+              .send(newUser)
+              .expect(201)
+              .expect(res => {
+                expect(res.body).to.have.property('id')
+                expect(res.body.user_name).to.eql(newUser.user_name)
+                expect(res.body.full_name).to.eql(newUser.full_name)
+                expect(res.body.nickname).to.eql('')
+                expect(res.body).to.not.have.property('password')
+                expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
+                const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+                const actualDate = new Date(res.body.date_created).toLocaleString()
+                expect(actualDate).to.eql(expectedDate)
+              })
+              .expect(res =>
+                  db
+                    .from('blogful_users')
+                    .select('*')
+                    .where({ id: res.body.id })
+                    .first()
+                    .then(row => {
+                      expect(row.user_name).to.eql(newUser.user_name)
+                      expect(row.full_name).to.eql(newUser.full_name)
+                      expect(row.nickname).to.eql(null)
+                      const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+                      const actualDate = new Date(row.date_created).toLocaleString()
+                      expect(actualDate).to.eql(expectedDate)
+                    })
+               )
+          })//end it 'responds 201, serialized user, storing bcryped password'
+    })//end context`Happy path`      
+
   })//end describe `POST /api/users`
 })//end describe 'Users Endpoints'
